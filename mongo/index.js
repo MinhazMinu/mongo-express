@@ -18,6 +18,9 @@
     10. now creating Post request :) . we use PostMan to test post api
     11. create a post api
     12. to read  post req from body  we need to install  body-parser middleware => npm install body-parser
+
+    ==    ===    ===    ====    ====    ====    ====    === 
+    13. now to send data from html page .not from postman :)
  */
 
 const express = require("express");
@@ -65,7 +68,10 @@ app.get("/users/:id", (req, res) => {
 
 app.post("/addUser", (req, res) => {
   //creating post request
-  console.log(req.body); //reding data from post req from body
+  const user = req.body;
+  user.id = 55;
+
+  res.send(user); //reding data from post req from body
 });
 
 app.listen(3000); //listing port number
