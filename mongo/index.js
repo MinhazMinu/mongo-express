@@ -30,6 +30,7 @@
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
+const MongoClient = require('mongodb').MongoClient;
 const app = express(); //creating express Application
 
 const pass = 'Dark@0011'
@@ -37,32 +38,24 @@ const dbUser = 'dbUser'
 
 const users = ["rahim", "karim", "jodu", "modhu"];
 
+app.use(cors()); // cors problem solved
+app.use(bodyParser.json()); // body parser middleware to post request from html file
+
+const uri = "mongodb+srv://dbUser:Dark@0011@cluster0-37ztz.mongodb.net/test?retryWrites=true&w=majority";
+const client = new MongoClient(uri, { useNewUrlParser: true });
+
 // database connection
 
 // coonecting mongo DB
-const MongoClient = require('mongodb').MongoClient;
-const uri = "mongodb+srv://dbUser:Dark@0011@cluster0-37ztz.mongodb.net/test?retryWrites=true&w=majority";
-const client = new MongoClient(uri, { useNewUrlParser: true });
-client.connect(err => {
-  const collection = client.db("onlineStore").collection("products");  //databse name onlineStore , table or collection name product
-  // perform actions on the collection object
-  collection.insertOne({
-    name:"mobile",
-    price:190,
-    stock:16
-  }, (err, res)=>{
-    console.log('successfully inserted');
-    
-  })
-  console.log("database connected...");
-  
-  client.close();
-});
 
 
 
-app.use(cors()); // cors problem solved
-app.use(bodyParser.json()); // body parser middleware to post request from html file
+
+
+
+
+
+
 
 // get api
 app.get("/", (req, res) => {
@@ -97,12 +90,31 @@ app.get("/users/:id", (req, res) => {
  * Post request
  */
 
-app.post("/addUser", (req, res) => {
+app.post("/addProduct", (req, res) => {
   //creating post request
-  const user = req.body;
-  user.id = 55;
+  const product = req.body;
+  console.log(product);
+  
 
-  res.send(user); //reding data from post req from body
+  client.connect(err => {
+  const collection = client.db("onlineStore").collection("products");  //databse name onlineStore , table or collection name product
+  // perform actions on the collection object
+  collection.insertOne(
+    product
+  , (err, result)=>{
+
+    console.log('successfully inserted',result);
+    
+    res.send(result.ops[0]); //reding data from post req from body
+
+    
+  });
+  console.log("database connected...");
+  
+  client.close();
+});
+
+  
 });
 
 app.listen(3000); //listing port number
