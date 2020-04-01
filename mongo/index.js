@@ -10,11 +10,16 @@
                             });
     6.install nodemon => npm install -g nodemon
     7. creting another api => /fruits/banana
+    8. Dynamic url api = > set api url with " : " as '/users/:id'. here " :id " is dynamically taken from url
+                            and to get this id from url we use req.params.id
  */
 
 const express = require("express");
 const app = express(); //creating express Application
 
+const users = ["rahim", "karim", "jodu", "modhu"];
+
+// get api
 app.get("/", (req, res) => {
   // Calling root api
   const fruit = {
@@ -32,6 +37,15 @@ app.get("/fruits/banana", (req, res) => {
     price: 1000
   };
   res.send(fruitDetails);
+});
+
+app.get("/users/:id", (req, res) => {
+  console.log(req.query.sort); //check request query => that means  what is after ?in url. EX  ?sort=asc &
+
+  //dynamic url api
+  const id = req.params.id; //getting userid from url
+  const name = users[id]; // getting use name from users Array
+  res.send({ id, name });
 });
 
 app.listen(3000); //listing port number
