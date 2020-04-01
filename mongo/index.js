@@ -96,10 +96,10 @@ app.get("/users/:id", (req, res) => {
  */
 
 app.post("/addProduct", (req, res) => {
-  client = new MongoClient(uri, { useNewUrlParser: true });
   const product = req.body;
   console.log(product);
   // database Connection
+  client = new MongoClient(uri, { useNewUrlParser: true });
   client.connect(err => {
     const collection = client.db("onlineStore").collection("products"); //databse name onlineStore , table or collection name product
     // perform actions on the collection object

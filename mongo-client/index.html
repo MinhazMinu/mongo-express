@@ -57,15 +57,18 @@
           displayProducts(data);
         });
       function displayProducts(data) {
-        // const productContainer = document.getElementById(productList);
+        const productContainer = document.getElementById("productList");
         for (let i = 0; i < data.length; i++) {
           const product = data[i];
 
-          const item = document.createElement("li");
-          item.innerText = `${product.name} -:$ ${product.price} : Stock ${product.stock}`;
-          console.log(item);
-          productList.appendChild(item);
+          appendProduct(product, productContainer);
         }
+      }
+      function appendProduct(product, productContainer) {
+        const item = document.createElement("li");
+        item.innerText = `${product.name} -:$ ${product.price} : Stock ${product.stock}`;
+        console.log(item);
+        productContainer.appendChild(item);
       }
 
       // Post Data to server
@@ -98,9 +101,11 @@
           });
       });
 
-      // function updateProduct(user) {
-      //   document.getElementById("userName").innerText = user.name;
-      // }
+      function updateProduct(product) {
+        const productContainer = document.getElementById("productList");
+        appendProduct(product, productContainer);
+        document.getElementById("userName").innerText = product.name;
+      }
     </script>
   </body>
 </html>
