@@ -29,26 +29,52 @@
     <p id="userName"></p>
     <div class="container">
       <div class="row">
-        <input type="text" class="form-control" id="name"  placeholder="name"/>
-        <input type="text" class="form-control" id="price" placeholder="price" />
-        <input type="text" class="form-control" id="stock" placeholder="stock" />
+        <input type="text" class="form-control" id="name" placeholder="name" />
+        <input
+          type="text"
+          class="form-control"
+          id="price"
+          placeholder="price"
+        />
+        <input
+          type="text"
+          class="form-control"
+          id="stock"
+          placeholder="stock"
+        />
         <button class="btn btn-primary" id="addProduct">Add Product</button>
       </div>
+      <p style="display: none; color: green" id="successMessage">
+        <small>Product Added Successfully</small>
+      </p>
+      <ul id="productList"></ul>
     </div>
 
     <script>
-      fetch("http://localhost:3000/users/2")
+      fetch("http://localhost:3000/products")
         .then(res => res.json())
         .then(data => {
-          document.getElementById("userName").innerText = data.name;
+          displayProducts(data);
         });
+      function displayProducts(data) {
+        // const productContainer = document.getElementById(productList);
+        for (let i = 0; i < data.length; i++) {
+          const product = data[i];
+
+          const item = document.createElement("li");
+          item.innerText = `${product.name} -:$ ${product.price} : Stock ${product.stock}`;
+          console.log(item);
+          productList.appendChild(item);
+        }
+      }
+
       // Post Data to server
       const btnAddUser = document.getElementById("addProduct");
       btnAddUser.addEventListener("click", () => {
         const name = document.getElementById("name").value;
         const price = document.getElementById("price").value;
         const stock = document.getElementById("stock").value;
-        const product = { name,price,stock };
+        const product = { name, price, stock };
         // post
         fetch("http://localhost:3000/addProduct", {
           method: "POST",
@@ -58,12 +84,23 @@
           }
         })
           .then(res => res.json())
-          .then(data => updateUser(data));
+          .then(data => {
+            updateProduct(data);
+
+            document.getElementById("name").value = "";
+            document.getElementById("price").value = "";
+            document.getElementById("stock").value = "";
+
+            document.getElementById("successMessage").style.display = "block";
+            setTimeout(() => {
+              document.getElementById("successMessage").style.display = "none";
+            }, 3000);
+          });
       });
 
-      function updateUser(user) {
-         document.getElementById("userName").innerText = user.name;
-      }
+      // function updateProduct(user) {
+      //   document.getElementById("userName").innerText = user.name;
+      // }
     </script>
   </body>
 </html>

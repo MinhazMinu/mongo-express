@@ -30,41 +30,46 @@
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
-const MongoClient = require('mongodb').MongoClient;
+const MongoClient = require("mongodb").MongoClient;
 const app = express(); //creating express Application
 
-const pass = 'Dark@0011'
-const dbUser = 'dbUser'
+const pass = "Dark@0011";
+const dbUser = "dbUser";
 
 const users = ["rahim", "karim", "jodu", "modhu"];
 
 app.use(cors()); // cors problem solved
 app.use(bodyParser.json()); // body parser middleware to post request from html file
 
-const uri = "mongodb+srv://dbUser:Dark@0011@cluster0-37ztz.mongodb.net/test?retryWrites=true&w=majority";
-const client = new MongoClient(uri, { useNewUrlParser: true });
+const uri =
+  "mongodb+srv://dbUser:Dark@0011@cluster0-37ztz.mongodb.net/test?retryWrites=true&w=majority";
+let client = new MongoClient(uri, { useNewUrlParser: true });
 
 // database connection
 
 // coonecting mongo DB
 
-
-
-
-
-
-
-
-
-
 // get api
-app.get("/", (req, res) => {
-  // Calling root api
-  const fruit = {
-    product: "ada",
-    price: 220
-  };
-  res.send(fruit);
+// Calling root api
+app.get("/products", (req, res) => {
+  client = new MongoClient(uri, { useNewUrlParser: true });
+  client.connect(err => {
+    const collection = client.db("onlineStore").collection("products"); //databse name onlineStore , table or collection name product
+    // perform actions on the collection object
+    collection.find().toArray((err, documents) => {
+      if (err) {
+        console.log(err);
+        res.status(500).send({ message: err });
+      } else {
+        console.log("successfully inserted");
+
+        res.send(documents); //reding data from post req from body
+      }
+    });
+    console.log("database connected...");
+
+    client.close();
+  });
 });
 
 app.get("/fruits/banana", (req, res) => {
@@ -91,30 +96,26 @@ app.get("/users/:id", (req, res) => {
  */
 
 app.post("/addProduct", (req, res) => {
-  //creating post request
+  client = new MongoClient(uri, { useNewUrlParser: true });
   const product = req.body;
   console.log(product);
-  
-
+  // database Connection
   client.connect(err => {
-  const collection = client.db("onlineStore").collection("products");  //databse name onlineStore , table or collection name product
-  // perform actions on the collection object
-  collection.insertOne(
-    product
-  , (err, result)=>{
+    const collection = client.db("onlineStore").collection("products"); //databse name onlineStore , table or collection name product
+    // perform actions on the collection object
+    collection.insertOne(product, (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log("successfully inserted");
 
-    console.log('successfully inserted',result);
-    
-    res.send(result.ops[0]); //reding data from post req from body
+        res.send(result.ops[0]); //reding data from post req from body
+      }
+    });
+    console.log("database connected...");
 
-    
+    client.close();
   });
-  console.log("database connected...");
-  
-  client.close();
-});
-
-  
 });
 
 app.listen(3000); //listing port number
