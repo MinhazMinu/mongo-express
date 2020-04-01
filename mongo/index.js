@@ -56,16 +56,19 @@ app.get("/products", (req, res) => {
   client.connect(err => {
     const collection = client.db("onlineStore").collection("products"); //databse name onlineStore , table or collection name product
     // perform actions on the collection object
-    collection.find().toArray((err, documents) => {
-      if (err) {
-        console.log(err);
-        res.status(500).send({ message: err });
-      } else {
-        console.log("successfully inserted");
+    collection
+      .find({ name: "mobile" })
+      .limit(5)
+      .toArray((err, documents) => {
+        if (err) {
+          console.log(err);
+          res.status(500).send({ message: err });
+        } else {
+          console.log("successfully inserted");
 
-        res.send(documents); //reding data from post req from body
-      }
-    });
+          res.send(documents); //reding data from post req from body
+        }
+      });
     console.log("database connected...");
 
     client.close();
