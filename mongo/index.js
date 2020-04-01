@@ -21,6 +21,10 @@
 
     ==    ===    ===    ====    ====    ====    ====    === 
     13. now to send data from html page .not from postman :)
+
+
+    14.Install mongoDB => npm install mongodb --save
+    14 Create account in mongo Atlas
  */
 
 const express = require("express");
@@ -28,7 +32,34 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const app = express(); //creating express Application
 
+const pass = 'Dark@0011'
+const dbUser = 'dbUser'
+
 const users = ["rahim", "karim", "jodu", "modhu"];
+
+// database connection
+
+// coonecting mongo DB
+const MongoClient = require('mongodb').MongoClient;
+const uri = "mongodb+srv://dbUser:Dark@0011@cluster0-37ztz.mongodb.net/test?retryWrites=true&w=majority";
+const client = new MongoClient(uri, { useNewUrlParser: true });
+client.connect(err => {
+  const collection = client.db("onlineStore").collection("products");  //databse name onlineStore , table or collection name product
+  // perform actions on the collection object
+  collection.insertOne({
+    name:"mobile",
+    price:190,
+    stock:16
+  }, (err, res)=>{
+    console.log('successfully inserted');
+    
+  })
+  console.log("database connected...");
+  
+  client.close();
+});
+
+
 
 app.use(cors()); // cors problem solved
 app.use(bodyParser.json()); // body parser middleware to post request from html file
