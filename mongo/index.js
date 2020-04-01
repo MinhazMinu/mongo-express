@@ -14,15 +14,21 @@
                             and to get this id from url we use req.params.id
 
     9.load data from HTML file .. => for this create another folder where client side side will host
+==================================================================================================
+    10. now creating Post request :) . we use PostMan to test post api
+    11. create a post api
+    12. to read  post req from body  we need to install  body-parser middleware => npm install body-parser
  */
 
 const express = require("express");
 const cors = require("cors");
+const bodyParser = require("body-parser");
 const app = express(); //creating express Application
 
 const users = ["rahim", "karim", "jodu", "modhu"];
 
 app.use(cors()); // cors problem solved
+app.use(bodyParser.json()); // body parser middleware to post request from html file
 
 // get api
 app.get("/", (req, res) => {
@@ -51,6 +57,15 @@ app.get("/users/:id", (req, res) => {
   const id = req.params.id; //getting userid from url
   const name = users[id]; // getting use name from users Array
   res.send({ id, name });
+});
+
+/**
+ * Post request
+ */
+
+app.post("/addUser", (req, res) => {
+  //creating post request
+  console.log(req.body); //reding data from post req from body
 });
 
 app.listen(3000); //listing port number
