@@ -9,15 +9,20 @@
                                 res.send("send response");
                             });
     6.install nodemon => npm install -g nodemon
-    7. creting another api => /fruits/banana
+    7. creating another api => /fruits/banana
     8. Dynamic url api = > set api url with " : " as '/users/:id'. here " :id " is dynamically taken from url
                             and to get this id from url we use req.params.id
+
+    9.load data from HTML file .. => for this create another folder where client side side will host
  */
 
 const express = require("express");
+const cors = require("cors");
 const app = express(); //creating express Application
 
 const users = ["rahim", "karim", "jodu", "modhu"];
+
+app.use(cors()); // cors problem solved
 
 // get api
 app.get("/", (req, res) => {
