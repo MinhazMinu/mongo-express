@@ -57,19 +57,16 @@ app.get("/products", (req, res) => {
   client.connect(err => {
     const collection = client.db("onlineStore").collection("products"); //databse name onlineStore , table or collection name product
     // perform actions on the collection object
-    collection
-      .find({ name: "mobile" })
-      .limit(5)
-      .toArray((err, documents) => {
-        if (err) {
-          console.log(err);
-          res.status(500).send({ message: err });
-        } else {
-          console.log("successfully inserted");
+    collection.find().toArray((err, documents) => {
+      if (err) {
+        console.log(err);
+        res.status(500).send({ message: err });
+      } else {
+        console.log("successfully inserted");
 
-          res.send(documents); //reding data from post req from body
-        }
-      });
+        res.send(documents); //reding data from post req from body
+      }
+    });
     console.log("database connected...");
 
     client.close();
@@ -86,13 +83,29 @@ app.get("/fruits/banana", (req, res) => {
   res.send(fruitDetails);
 });
 
-app.get("/users/:id", (req, res) => {
+app.get("/product/:key", (req, res) => {
   console.log(req.query.sort); //check request query => that means  what is after ?in url. EX  ?sort=asc &
 
   //dynamic url api
-  const id = req.params.id; //getting userid from url
-  const name = users[id]; // getting use name from users Array
-  res.send({ id, name });
+  const key = req.params.key; //getting userid from url
+  client = new MongoClient(uri, { useNewUrlParser: true });
+  client.connect(err => {
+    const collection = client.db("onlineStore").collection("products"); //databse name onlineStore , table or collection name product
+    // perform actions on the collection object
+    collection.find({ key }).toArray((err, documents) => {
+      if (err) {
+        console.log(err);
+        res.status(500).send({ message: err });
+      } else {
+        console.log("successfully inserted");
+
+        res.send(documents); //reding data from post req from body
+      }
+    });
+    console.log("database connected...");
+
+    client.close();
+  });
 });
 
 /**
@@ -107,7 +120,7 @@ app.post("/addProduct", (req, res) => {
   client.connect(err => {
     const collection = client.db("onlineStore").collection("products"); //databse name onlineStore , table or collection name product
     // perform actions on the collection object
-    collection.insertOne(product, (err, result) => {
+    collection.insert(product, (err, result) => {
       if (err) {
         console.log(err);
       } else {
@@ -122,4 +135,4 @@ app.post("/addProduct", (req, res) => {
   });
 });
 
-app.listen(3000); //listing port number
+app.listen(4200); //listing port number
