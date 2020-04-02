@@ -99,7 +99,7 @@ app.get("/product/:key", (req, res) => {
       } else {
         console.log("successfully inserted");
 
-        res.send(documents); //reding data from post req from body
+        res.send(documents[0]); //reding data from post req from body
       }
     });
     console.log("database connected...");
