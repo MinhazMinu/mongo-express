@@ -31,6 +31,7 @@ const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const MongoClient = require("mongodb").MongoClient;
+require("dotenv").config();
 const app = express(); //creating express Application
 
 const pass = "Dark@0011";
