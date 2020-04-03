@@ -108,13 +108,41 @@ app.get("/product/:key", (req, res) => {
   });
 });
 
+// ===================================
+
+app.post("/getProductsByKey", (req, res) => {
+  // console.log(req.query.sort); //check request query => that means  what is after ?in url. EX  ?sort=asc &
+
+  //dynamic url api
+  const key = req.params.key; //getting userid from url
+  const productKeys = req.body;
+  client = new MongoClient(uri, { useNewUrlParser: true });
+  client.connect(err => {
+    const collection = client.db("onlineStore").collection("products"); //databse name onlineStore , table or collection name product
+    // perform actions on the collection object
+    collection.find({ key: { $in: productKeys } }).toArray((err, documents) => {
+      if (err) {
+        console.log(err);
+        res.status(500).send({ message: err });
+      } else {
+        console.log("successfully inserted");
+
+        res.send(documents); //reding data from post req from body
+      }
+    });
+    console.log("database connected...");
+
+    client.close();
+  });
+});
+
 /**
  * Post request
  */
 
 app.post("/addProduct", (req, res) => {
   const product = req.body;
-  console.log(product);
+  // console.log(product);
   // database Connection
   client = new MongoClient(uri, { useNewUrlParser: true });
   client.connect(err => {
