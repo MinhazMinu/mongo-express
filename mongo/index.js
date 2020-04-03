@@ -163,4 +163,30 @@ app.post("/addProduct", (req, res) => {
   });
 });
 
+//==========================
+
+app.post("/placeOrder", (req, res) => {
+  const orderDetails = req.body;
+  orderDetails.orderTime = new Date();
+  // console.log(product);
+  // database Connection
+  client = new MongoClient(uri, { useNewUrlParser: true });
+  client.connect(err => {
+    const collection = client.db("onlineStore").collection("orders"); //databse name onlineStore , table or collection name product
+    // perform actions on the collection object
+    collection.insertOne(orderDetails, (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log("successfully inserted");
+
+        res.send(result.ops[0]); //reding data from post req from body
+      }
+    });
+    console.log("database connected...");
+
+    client.close();
+  });
+});
+
 app.listen(4200); //listing port number
